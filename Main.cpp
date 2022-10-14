@@ -2,7 +2,7 @@
 
 
 int main(int argc, char* argv[]) {
-    op::options_description desc("All options for k-ESF");
+    op::options_description desc("All options for Alpha-ESF");
     int party;
     string path;
     string endpoint;
@@ -12,8 +12,8 @@ int main(int argc, char* argv[]) {
         ("path", op::value<string>(&path), "file path")
         ("endpoint", op::value<string>(&endpoint), "ip address and port")
         ("r", op::value<int>(&party), "party ID")
-		("Nx", op::value<int>(&NX) ,"data size of server")
-		("Ny", op::value<int>(&NY) , "data size of client")
+		("Ns", op::value<int>(&NX) ,"data size of server")
+		("Nc", op::value<int>(&NY) , "data size of client")
         ("Alpha", op::value<int>(&K_IND), "alpha indistinguishablity")
         ("B", op::value<int>(&N_BLOCK), "the number of buckets");
     op::variables_map vm;

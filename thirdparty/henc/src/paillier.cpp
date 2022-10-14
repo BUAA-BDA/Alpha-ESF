@@ -133,7 +133,9 @@ void Paillier::key_gen(SecretKey& sk, PublicKey& pk, long bitlens){
 	// Generate two random prime numbers
 	NTL::ZZ p, q;
 	
-	rsa_param(p, q, bitlens);
+	do {
+		rsa_param(p, q, bitlens);
+	} while (NTL::GCD(p*q, (p - 1) * (q - 1)) != 1);
 	
 	// Generate key pair
 	SecretKey skey(p, q);
@@ -146,9 +148,9 @@ void Paillier::key_gen(SecretKey& sk, PublicKey& pk, long bitlens){
 void Paillier::key_gen(SecretKey& sk, PublicKey& pk, long bitlens, NTL::ZZ& p, NTL::ZZ& q){
 	// Generate two random prime numbers
 	// NTL::ZZ p, q;
-	
-	rsa_param(p, q, bitlens);
-	
+	do {
+		rsa_param(p, q, bitlens);
+	} while (NTL::GCD(p*q, (p - 1) * (q - 1)) != 1);
 	// Generate key pair
 	SecretKey skey(p, q);
 	PublicKey pkey(p*q);
