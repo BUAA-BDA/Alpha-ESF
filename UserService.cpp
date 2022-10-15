@@ -150,11 +150,12 @@ void build_ESF(int start, int end, int m, Paillier::Encryptor &enc, vector<vecto
     }
 }
 
-int build_index(string path)
+int build_index(string path, int thread_num)
 {
     data_sender = new raw_data[NX];
     data_loader_service(path);
     cout << "finish load data!" << endl;
+    auto start_time = chrono::high_resolution_clock::now();
     // Paillier
     Paillier::SecretKey sk;
     Paillier::PublicKey pk;
@@ -180,15 +181,17 @@ int build_index(string path)
         // cout << "element sum: " << accumulate(sta.begin(), sta.end(), 0) << endl;
     }
     delete[] data_sender;
-    boost::asio::thread_pool pool(THREAD_NUM);
+    boost::asio::thread_pool pool(thread_num);
     int start = 0;
-    for (int i = 0; i < THREAD_NUM; i++)
+    for (int i = 0; i < thread_num; i++)
     {
-        int share_count = i < N_BLOCK % THREAD_NUM ? N_BLOCK / THREAD_NUM + 1 : N_BLOCK / THREAD_NUM;
+        int share_count = i < N_BLOCK % thread_num ? N_BLOCK / thread_num + 1 : N_BLOCK / thread_num;
         auto task = boost::bind(build_ESF, start, start + share_count - 1, m, ref(enc), ref(data_block));
         boost::asio::post(pool, task);
         start += share_count;
     }
     pool.join();
+    auto finish_time = chrono::high_resolution_clock::now();
+    cout << "finish building index using time: " << chrono::duration_cast<chrono::milliseconds>(finish_time - start_time).count() << " ms" << endl;
     return 0;
 }

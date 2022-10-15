@@ -61,7 +61,6 @@ namespace op = boost::program_options;
 // #define K_IND 10000
 #define LOAD 1
 #define BLOCK_SEED 1458582678
-#define THREAD_NUM 4
 extern int NX;
 extern int NY;
 // extern int PACKAGE_SIZE;
@@ -76,6 +75,6 @@ void unpacking(vector<ZZ> &dst, ZZ &src, int len);
 void ZZ2char(ZZ &src, unsigned char *dst);
 void init_packing();
 int user_servive(string endpoint);
-int build_index(string path);
+int build_index(string path, int thread_num);
 int user_client(string endpoint, string path);
 #endif

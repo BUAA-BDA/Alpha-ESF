@@ -55,6 +55,7 @@ cd ..
   All options for Alpha-ESF:
     --help                Produce help message
     --build               build ESF index
+    --thread arg (=4)     thread number of building index (default 4)
     --path arg            file path
     --endpoint arg        ip address and port
     --r arg               party ID
