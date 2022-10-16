@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         ("path", op::value<string>(&path), "file path")
         ("endpoint", op::value<string>(&endpoint), "ip address and port")
         ("r", op::value<int>(&party), "party ID")
-        ("Ns", op::value<int>(&NX), "data size of server")
+        ("Ns", op::value<long>(&NX), "data size of server")
         ("Nc", op::value<int>(&NY), "data size of client")
         ("Alpha", op::value<int>(&K_IND), "alpha indistinguishablity")
         ("B", op::value<int>(&N_BLOCK), "the number of buckets");

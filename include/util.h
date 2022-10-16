@@ -61,7 +61,7 @@ namespace op = boost::program_options;
 // #define K_IND 10000
 #define LOAD 1
 #define BLOCK_SEED 1458582678
-extern int NX;
+extern long NX;
 extern int NY;
 // extern int PACKAGE_SIZE;
 // extern int DES_OPT;

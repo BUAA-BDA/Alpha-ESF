@@ -1,9 +1,7 @@
 #include "util.h"
 
-int NX;
+long NX;
 int NY;
-// int PACKAGE_SIZE;
-// int DES_OPT;
 int K_IND;
 int N_BLOCK;
 ZZ template_bit_or;
@@ -62,7 +60,7 @@ void init_packing()
 {
     template_bit_or = 0;
     ZZ aux_templace;
-    NTL::LeftShift(aux_templace, ZZ(1), 4 * 8 + 15);
+    NTL::LeftShift(aux_templace, ZZ(1), 4 * 8 + 17);
     ZZ cof;
     NTL::LeftShift(cof, ZZ(1), PACKAGE_LEN);
     cof_pt.set_pt(cof);

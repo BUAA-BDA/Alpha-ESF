@@ -27,8 +27,8 @@ public:
     HashFunctions hash_function;
 
     EncSumFilter();
-    EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &enc);
-    EncSumFilter(Channel &chl, int m);
+    EncSumFilter(int m_in, vector<raw_data> *data, Paillier::Encryptor &enc);
+    EncSumFilter(Channel &chl);
     void find(ZZ &dst, raw_data x, Paillier::Encryptor &enc);
     void send(Channel &chl);
     int64_t get_pad();

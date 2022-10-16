@@ -37,7 +37,7 @@ void psi_recv(vector<raw_data> &res, Paillier::Encryptor &enc, vector<EncSumFilt
             for (int t = i * BATCH_SIZE + left_package; t < i * BATCH_SIZE + right_package; t++)
             {
                 // cout << t - i * BATCH_SIZE << " : " << t << endl;
-                rand_list[t - i * BATCH_SIZE - left_package] = LOWER_BOUND + rng() % (UPPER_BOUND - LOWER_BOUND);
+                rand_list[t - i * BATCH_SIZE - left_package] = (long)((1.0 * rng() / UINT_MAX) * (UPPER_BOUND - LOWER_BOUND)) + LOWER_BOUND;
                 data_list[t - i * BATCH_SIZE - left_package] = data_recv[t] + rand_list[t - i * BATCH_SIZE - left_package];
                 filter_list[data2pos[data_recv[t]]].find(bloom_list[t - i * BATCH_SIZE - left_package], data_recv[t], enc);
                 pad_list[t - i * BATCH_SIZE - left_package] = filter_list[data2pos[data_recv[t]]].get_pad() * H;
@@ -109,10 +109,10 @@ int user_client(string endpoint, string path)
     // cout << "pk: " << pk.get_N_square() << endl;
 
     // hash function
-    int m = ALPHA * (NX / N_BLOCK) + 64;
+    // int m = ALPHA * (NX / N_BLOCK) + 64;
     vector<int> seeds;
     chl0.recv(seeds);
-    HashFunctions hash_functions(seeds, m);
+    HashFunctions hash_functions(seeds, 0);
     cout << "finish receive and construct hash function" << endl;
     std::random_device rd;
     std::mt19937 mt(rd());
@@ -159,7 +159,7 @@ int user_client(string endpoint, string path)
     vector<EncSumFilter> enc_sum_filter_list;
     for (int i = 0; i < block_id_list.size(); i++)
     {
-        enc_sum_filter_list.emplace_back(chl0, m);
+        enc_sum_filter_list.emplace_back(chl0);
     }
     cout << "finish construct enc sum filter" << endl;
     // // auto start = chrono::high_resolution_clock::now();

@@ -4,7 +4,7 @@ raw_data *data_sender;
 void data_loader_service(string path)
 {
     ifstream fp(path);
-    for (int i = 0; i < NX; i++)
+    for (long i = 0; i < NX; i++)
     {
         raw_data t;
         fp >> t;
@@ -169,8 +169,9 @@ int build_index(string path, int thread_num)
 
     vector<vector<raw_data> *> data_block = vector<vector<raw_data> *>(N_BLOCK);
     int m = ALPHA * (NX / N_BLOCK) + 64;
+    cout << "m: " << m << endl;
     HashFunctions hash_functions(1, m);
-    for (int i = 0; i < NX; i++)
+    for (long i = 0; i < NX; i++)
     {
         int idx = hash_functions.get_block_id(data_sender[i], N_BLOCK);
         if (data_block[idx] == nullptr)

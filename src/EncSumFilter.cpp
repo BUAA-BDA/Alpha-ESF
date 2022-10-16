@@ -2,10 +2,10 @@
 
 EncSumFilter::EncSumFilter() {}
 
-EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &enc) : hash_function(H, m)
+EncSumFilter::EncSumFilter(int m_in, vector<raw_data> *data, Paillier::Encryptor &enc) : hash_function(H, m_in)
 {
-    this->m = m;
-    this->byte_length = vector<int>(m);
+    this->m = m_in;
+    
     vector<raw_data> order_data;
     // vector<unordered_set<raw_data>> bloom_set(m);
     // cout << "data size: " << data->size() << " m: " << m << endl;
@@ -21,9 +21,16 @@ EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &e
     {
         cnt++;
         // assert(cnt < 1000);
+        if (cnt % 500 == 0) {
+            this->m += 13;
+        }
+        if (cnt % 1000 == 0) {
+            // cout << "********" << cnt << endl; 
+            this->m += 13;
+        }
         order_data.clear();
-        hash_function.reset_hash_seed();
-        vector<unordered_set<raw_data>> bloom_set(m);
+        hash_function.reset_hash_seed(this->m);
+        vector<unordered_set<raw_data>> bloom_set(this->m);
         for (auto p : data_dup)
         {
             for (int i = 0; i < H; i++)
@@ -69,7 +76,8 @@ EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &e
     } while (order_data.size() != data_dup.size());
     // cout << "order data size: " << order_data.size() << " try cnt: " << cnt << endl;
     // assert(order_data.size() == data.size());
-    vector<int64_t> tmp_bloom(m);
+    this->byte_length = vector<int>(this->m);
+    vector<int64_t> tmp_bloom(this->m);
     unordered_set<int> occupied;
     for (int u = order_data.size() - 1; u >= 0; u--)
     {
@@ -101,7 +109,7 @@ EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &e
         int64_t randoms = 0L;
         for (int i = 0; i < free_pos.size() - 1; i++)
         {
-            tmp_bloom[free_pos[i]] = LOWER_BOUND + rng() % (UPPER_BOUND - LOWER_BOUND);
+            tmp_bloom[free_pos[i]] = (long)((1.0 * rng() / UINT_MAX) * (UPPER_BOUND - LOWER_BOUND)) + LOWER_BOUND;
             randoms = randoms + tmp_bloom[free_pos[i]];
             occupied.insert(free_pos[i]);
         }
@@ -111,7 +119,7 @@ EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &e
         randoms += existed;
         tmp_bloom[last_id] = p - randoms;
     }
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < this->m; i++)
     {
         if (occupied.count(i) == 0)
         {
@@ -120,7 +128,7 @@ EncSumFilter::EncSumFilter(int m, vector<raw_data> *data, Paillier::Encryptor &e
     }
     int64_t min_ele = *min_element(tmp_bloom.begin(), tmp_bloom.end());
     this->pad = min_ele < 0 ? -1 * min_ele : 0;
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < this->m; i++)
     {
         tmp_bloom[i] += this->pad;
         HEnc::PTxt pt;
@@ -177,21 +185,20 @@ void EncSumFilter::send(Channel &chl)
     chl.send(this->pad);
     chl.send(this->byte_length);
     chl.send(this->bloom);
+    chl.send(this->m);
     // cout << "pad: " << this->pad << endl;
 }
 
-EncSumFilter::EncSumFilter(Channel &chl, int m)
+EncSumFilter::EncSumFilter(Channel &chl)
 {
-    this->m = m;
     vector<int> seeds;
     chl.recv(seeds);
     chl.recv(this->pad);
     chl.recv(this->byte_length);
     chl.recv(this->bloom);
-    this->hash_function = HashFunctions(seeds, m);
-    // cout << "pad: " << this->pad << endl;
-
-    assert(this->byte_length.size() == m);
+    chl.recv(this->m);
+    this->hash_function = HashFunctions(seeds, this->m);
+    assert(this->byte_length.size() == this->m);
 }
 
 int64_t EncSumFilter::get_pad()
