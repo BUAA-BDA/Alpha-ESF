@@ -162,7 +162,6 @@ int user_client(string endpoint, string path)
         enc_sum_filter_list.emplace_back(chl0);
     }
     cout << "finish construct enc sum filter" << endl;
-    // // auto start = chrono::high_resolution_clock::now();
     // // psi
     auto mid = chrono::high_resolution_clock::now();
     vector<raw_data> psi_result;

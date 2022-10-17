@@ -5,9 +5,7 @@ EncSumFilter::EncSumFilter() {}
 EncSumFilter::EncSumFilter(int m_in, vector<raw_data> *data, Paillier::Encryptor &enc) : hash_function(H, m_in)
 {
     this->m = m_in;
-    
     vector<raw_data> order_data;
-    // vector<unordered_set<raw_data>> bloom_set(m);
     // cout << "data size: " << data->size() << " m: " << m << endl;
     mt19937 rng(random_device{}());
     unordered_set<raw_data> data_dup;
@@ -21,11 +19,8 @@ EncSumFilter::EncSumFilter(int m_in, vector<raw_data> *data, Paillier::Encryptor
     {
         cnt++;
         // assert(cnt < 1000);
-        if (cnt % 500 == 0) {
-            this->m += 13;
-        }
-        if (cnt % 1000 == 0) {
-            // cout << "********" << cnt << endl; 
+        if (cnt % 500 == 0)
+        {
             this->m += 13;
         }
         order_data.clear();

@@ -70,5 +70,4 @@ void init_packing()
         NTL::LeftShift(aux_templace, aux_templace, PACKAGE_LEN);
         NTL::bit_or(template_bit_or, template_bit_or, aux_templace);
     }
-    // cout << "@@@" << template_bit_or << endl;
 }
