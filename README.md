@@ -2,7 +2,7 @@
 
 ## Feature
 
-This is an implementation of a practical unbalanced set intersection method $\alpha$-ESF, where the server-side dataset can amount to billion scale. In the processing of PSI, the client can learn the PSI result, while the server should not learn any additional information. We also provide an example on synthetic dataset below.
+This is an implementation of an efficient private identity verification method $\alpha$-ESF, where the server-side dataset can amount to billion scale. In the processing of PIV, the client can learn the PIV result, while the server should not learn any additional information. We also provide an example on synthetic dataset below.
 
 ## Environment
 
